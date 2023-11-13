@@ -1,40 +1,37 @@
 package com.example.prakmobile9tugas
 // ItemAdapter.kt
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.item_layout.view.*
+import com.example.prakmobile9tugas.databinding.ActivityItemLayoutBinding
+import com.example.prakmobile9tugas.model.Data
 
-class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
-
-    private var itemList: List<Item> = emptyList()
-
-    fun setData(items: List<Item>) {
-        itemList = items
-        notifyDataSetChanged()
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_item_layout, parent, false)
-        return ItemViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = itemList[position]
-        holder.bind(item)
-    }
-
-    override fun getItemCount(): Int {
-        return itemList.size
-    }
-
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: Item) {
-            itemView.itemName.text = item.name
-            itemView.itemDescription.text = item.description
-            Glide.with(itemView.context).load(item.image).into(itemView.itemImage)
+class ItemAdapter(private val listHero: List<Data>) :
+    RecyclerView.Adapter<ItemAdapter.ItemHeroViewHolder>() {
+    inner class ItemHeroViewHolder(private val binding: ActivityItemLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        val itemImage: ImageView = itemView.findViewById(R.id.imageHero)
+        fun bind(data: Data) {
+            with(binding) {
+                txtHeroName.text = data.title
+            }
         }
+    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
+            ItemHeroViewHolder {
+        val binding =
+            ActivityItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ItemHeroViewHolder(binding)
+    }
+    override fun getItemCount(): Int = listHero.size
+
+    override fun onBindViewHolder(holder: ItemHeroViewHolder, position: Int) {
+        holder.bind(listHero[position])
+        Glide.with(holder.itemView.context)
+            .load(listHero[position].image)
+            .centerCrop()
+            .into(holder.itemImage)
     }
 }
